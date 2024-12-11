@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Contoh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            transition: margin-left 0.5s; /* Transisi untuk konten utama */
+        }
+        .sidebar {
+            height: 100%; /* Tinggi penuh */
+            width: 250px; /* Lebar sidebar */
+            position: fixed; /* Posisi tetap */
+            top: 0;
+            left: -250px; /* Mulai di luar layar */
+            background-color: #111; /* Warna latar belakang */
+            overflow-x: hidden; /* Nonaktifkan scroll horizontal */
+            transition: 0.5s; /* Transisi untuk efek slide */
+            padding-top: 60px; /* Jarak atas konten dalam sidebar */
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 20px;
+            color: #818181; /* Warna teks */
+            display: block; /* Tampilkan sebagai blok */
+            transition: 0.3s; /* Transisi untuk efek hover */
+        }
+        .sidebar a:hover {
+            color: #f1f1f1; /* Warna teks saat hover */
+        }
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #111; /* Warna tombol */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<button class="openbtn" onclick="toggleSidebar()">☰ Buka Sidebar</button>
+
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar()">× Tutup</a>
+    <a href="#">Tentang Kami</a>
+    <a href="#">Layanan</a>
+    <a href="#">Kontak</a>
+</div>
+
+<div class="container">
+    <h1>Selamat Datang di Sidebar Contoh</h1>
+    <p>Ini adalah contoh penggunaan sidebar dalam HTML.</p>
+</div>
+
+<script>
+// Fungsi untuk membuka dan menutup sidebar
+function toggleSidebar() {
+    const sidebar = document.getElementById("mySidebar");
+    if (sidebar.style.left === "0px") {
+        sidebar.style.left = "-250px"; // Tutup sidebar
+    } else {
+        sidebar.style.left = "0"; // Buka sidebar
+    }
+}
+</script>
+
+</body>
+</html>

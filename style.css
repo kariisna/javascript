@@ -1,0 +1,75 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+}
+
+.ubah {
+    position: right; /* Mengubah posisi menjadi absolute agar bisa diatur secara bebas */
+    bottom: 10px; /* Memposisikan 10px dari bawah */
+    left: 50%; /* Memposisikan di tengah secara horizontal */
+    transform: translateX(-50%); /* Menggeser ke kiri sebanyak 50% dari lebar elemen */
+  }
+
+input[type="file"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.alert {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}

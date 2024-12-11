@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPG to PDF Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0; /* Sidebar selalu terlihat */
+            background-color: #111; /* Warna latar belakang */
+            overflow-x: hidden; /* Nonaktifkan scroll horizontal */
+            transition: 0.5s; /* Transisi untuk efek slide */
+            padding-top: 60px; /* Jarak atas konten dalam sidebar */
+            z-index: 1000; /* Pastikan sidebar di atas konten lain */
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px; /* Ukuran font untuk judul */
+        }
+
+        .sidebar a {
+            padding: 10px 15px; /* Jarak dalam tautan */
+            text-decoration: none; /* Nonaktifkan garis bawah pada tautan */
+            font-size: 20px; /* Ukuran font */
+            color: #818181; /* Warna teks */
+            display: block; /* Tampilkan sebagai blok */
+            transition: color 0.3s; /* Transisi untuk efek hover */
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1; /* Warna teks saat hover */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto 20px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 15px; /* Ukuran font untuk input file */
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        input[type="file"]:focus {
+            border-color: #007bff;
+        }
+
+        button#convertButton {
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 12px 15px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-size: 20px; 
+        }
+
+        button#convertButton:hover {
+        background-color:#0056b3; 
+        transform :scale(1.05); 
+        }
+
+        .alert {
+        color:#dc3545; 
+        text-align:center; 
+        margin-top :15 px ; 
+        font-size :16 px ; 
+        font-weight:bold ; 
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+        .sidebar {
+            width: 200px; /* Lebar sidebar di layar kecil */
+        }
+
+        h1 {
+            font-size: 28px; /* Ukuran font judul di layar kecil */
+        }
+
+        button#convertButton {
+            font-size: 18px; /* Ukuran font tombol konversi di layar kecil */
+        }
+        }
+
+        @media (max-width: 480px) {
+        .sidebar {
+            width :100%; 
+            position :relative ; 
+            left :0 ; 
+        }
+
+        h1 { 
+            font-size :24 px ; 
+        }
+
+        button#convertButton { 
+            font-size :16 px ; 
+        }
+        }
+    </style>
+</head>
+<body>
+    <div id="mySidebar" class="sidebar">
+        <h2>MENU</h2>
+        <a href="index.html">WORD to PDF</a>
+        <a href="excel.html">EXCEL to PDF</a>
+        <a href="jpg.html">JPG to PDF</a>
+    </div>
+
+<div class="container">
+    <h1>Export JPG ke PDF</h1>
+    <input type="file" id="jpgFileInput" accept=".jpg,.jpeg,.png" />
+    <button id="convertJpgButton">Konversi</button>
+    <div class="alert" id="jpgErrorMessage"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+// Sidebar toggle function
+function toggleSidebar() {
+    const sidebar = document.getElementById("mySidebar");
+    if (sidebar.style.left === "0px") {
+        sidebar.style.left = "-250px";
+    } else {
+        sidebar.style.left = "0";
+    }
+}
+
+// JPG to PDF functionality
+document.getElementById('convertJpgButton').addEventListener('click', async () => {
+    const fileInput = document.getElementById('jpgFileInput');
+    const errorMessage = document.getElementById('jpgErrorMessage');
+    errorMessage.textContent = '';
+
+    if (fileInput.files.length === 0) {
+        errorMessage.textContent = 'Silakan pilih file JPG!';
+        return;
+    }
+
+    const file = fileInput.files[0];
+
+    // Read image
+    const imgData = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+    });
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF();
+    doc.addImage(imgData, 'JPEG', 10, 10);
+    
+    // Save the PDF with the same name as the image file
+    doc.save(file.name.replace(/\.(jpg|jpeg|png)$/, '.pdf'));
+});
+</script>
+
+</body>
+</html>

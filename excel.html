@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel to PDF Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px; /* Ukuran font untuk judul */
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0; /* Sidebar selalu terlihat */
+            background-color: #111; /* Warna latar belakang */
+            overflow-x: hidden; /* Nonaktifkan scroll horizontal */
+            transition: 0.5s; /* Transisi untuk efek slide */
+            padding-top: 60px; /* Jarak atas konten dalam sidebar */
+            z-index: 1000; /* Pastikan sidebar di atas konten lain */
+        }
+
+        .sidebar a {
+            padding: 10px 15px; /* Jarak dalam tautan */
+            text-decoration: none; /* Nonaktifkan garis bawah pada tautan */
+            font-size: 20px; /* Ukuran font */
+            color: #818181; /* Warna teks */
+            display: block; /* Tampilkan sebagai blok */
+            transition: color 0.3s; /* Transisi untuk efek hover */
+        }
+
+        .sidebar a:hover {
+            color:#f1f1f1; /* Warna teks saat hover */
+        }
+
+        .openbtn {
+          font-size: 20px; 
+          cursor: pointer; 
+          background-color: #111; 
+          color: white; 
+          padding: 10px 15px; 
+          border: none; 
+          position: fixed; 
+          top: 10px; 
+          left: 10px; 
+          z-index: 900; 
+      }
+
+      .container { 
+          max-width: 600px; 
+          margin: 80px auto 20px auto; 
+          background: #ffffff; 
+          padding: 30px; 
+          border-radius: 12px; 
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+      }
+
+      input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            transition: border-color 0.3s ease;
+      }
+
+      input[type="file"]:focus {
+          border-color: #007bff;
+          outline: none;
+      }
+
+      button#convertExcelButton {
+          background-color: #007bff; /* Warna latar belakang tombol konversi */
+          color: white; /* Warna teks tombol konversi */
+          border: none; /* Tanpa border */
+          padding: 12px 15px; /* Padding dalam tombol konversi */
+          border-radius: 6px; /* Sudut melengkung tombol konversi */
+          cursor: pointer; /* Pointer saat hover di tombol konversi */
+          width: 100%; /* Lebar penuh tombol konversi */
+          font-size: 20px; /* Ukuran font tombol konversi */
+          transition: background-color 0.3s ease, transform 0.2s ease; /* Transisi efek hover dan transformasi */
+      }
+
+      button#convertExcelButton:hover {
+          background-color: #0056b3; /* Warna latar belakang saat hover pada tombol konversi */
+          transform: scale(1.05); /* Efek zoom saat hover pada tombol konversi */
+      }
+
+      .alert {
+          color: #dc3545; /* Warna teks untuk pesan kesalahan */
+          
+      }
+    
+      h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+        h2 {
+            color: #dcd3d3;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mySidebar" class="sidebar">
+        <h2>MENU</h2>
+        <a href="index.html">WORD to PDF</a>
+        <a href="excel.html">EXCEL to PDF</a>
+        <a href="jpg.html">JPG to PDF</a>
+    </div>
+
+<div class="container">
+    <h1>Export EXCEL ke PDF</h1>
+    <input type="file" id="excelFileInput" accept=".xlsx" />
+    <button id="convertExcelButton">Konversi</button>
+    <div class="alert" id="excelErrorMessage"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+// Sidebar toggle function
+function toggleSidebar() {
+    const sidebar = document.getElementById("mySidebar");
+    if (sidebar.style.left === "0px") {
+        sidebar.style.left = "-250px";
+    } else {
+        sidebar.style.left = "0";
+    }
+}
+
+// Converter functionality
+document.getElementById('convertExcelButton').addEventListener('click', async () => {
+    const fileInput = document.getElementById('excelFileInput');
+    const errorMessage = document.getElementById('excelErrorMessage');
+    errorMessage.textContent = '';
+
+    if (fileInput.files.length === 0) {
+        errorMessage.textContent = 'Silakan pilih file XLSX!';
+        return;
+    }
+
+    const file = fileInput.files[0];
+
+    try {
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type:'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header :1 });
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        jsonData.forEach((row, index) => {
+            doc.text(row.join(' '),10,10 + (index *10));
+        });
+
+        doc.save(file.name.replace(/\.xlsx$/, '.pdf'));
+    } catch (error) {
+        console.error('Terjadi kesalahan:', error);
+        errorMessage.textContent ='Gagal mengonversi file.Silakan coba lagi.';
+    }
+});
+</script>
+
+</body>
+</html>
